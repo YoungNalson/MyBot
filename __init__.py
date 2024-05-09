@@ -22,30 +22,10 @@ class BrowserNotSupported(Exception):
         super().__init__(self.message)
 
 class MyBot(BotOptions):
-    def __init__(
-                self,
-                browser:str,
-                download_folder:str = None,
-                profile:str = None,
-                extensions:list = [],
-                num_bot:int = None,
-                options: ArgOptions = None,
-                chromium_executable:str = None,
-                driver_executable:str = None,
-                copy_profile: bool = False
-            ) -> None:
-        super().__init__(
-            browser,
-            download_folder,
-            profile,
-            extensions,
-            num_bot,
-            chromium_executable,
-            options,
-            copy_profile
-        )
-        self.chromium_executable = chromium_executable
-        self.driver_executable = driver_executable
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
+        self.chromium_executable = kwargs.get('chromium_executable', None)
+        self.driver_executable = kwargs.get('driver_executable', None)
         self.driver = None
 
     @property

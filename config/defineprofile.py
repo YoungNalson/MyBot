@@ -25,15 +25,10 @@ def check_folder(folder_path:str, timeout_seconds=60):
         raise FolderDoesNotExist
 
 class DefineProfile:
-    def __init__(
-            self,
-            profile:str = None,
-            num_bot:int = None,
-            copy_profile:bool = False
-        ) -> None:
-        self.copy_profile = copy_profile
-        self.num_bot = num_bot
-        self.profile = profile
+    def __init__(self, **kwargs) -> None:
+        self.copy_profile = kwargs.get('copy_profile', True)
+        self.num_bot = kwargs.get('num_bot', 0)
+        self.profile = kwargs.get('profile', None)
 
     def define_profile(self, num_bot:int, profile:str) -> str:
         current_directory = os.getcwd()
