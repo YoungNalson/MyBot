@@ -30,9 +30,9 @@ class DefineProfile:
         self.num_bot = kwargs.get('num_bot', 0)
         self.profile = kwargs.get('profile', None)
 
-    def define_profile(self, num_bot:int, profile:str) -> str:
+    def define_profile(self, profile) -> str:
         current_directory = os.getcwd()
-        profile_directory = fr'{current_directory}\bots\bot{num_bot}'
+        profile_directory = fr'{current_directory}\bots\bot{self._num_bot}'
 
         try:
             shutil.rmtree(profile_directory)
@@ -72,6 +72,6 @@ class DefineProfile:
     @profile.setter
     def profile(self, profile):
         if profile is None or self.copy_profile is True:
-            self._profile = self.define_profile(self._num_bot, profile)
+            self._profile = self.define_profile(self.profile)
         else:
             self._profile = profile
