@@ -115,6 +115,19 @@ class BotOptions(DefineProfile):
             raise ChromiumPathNotInformed
         self._chromium_executable = chromium_executable
 
+    
+    @property
+    def options(self):
+        return self._options
+    
+    @options.setter
+    def options(self, options):
+        if options is None:
+            self._options = self.define_options()
+        else:
+            self._options = options
+
+
     def define_options(self) -> ArgOptions:
         
         load_extensions = '--load-extension='
@@ -179,21 +192,3 @@ class BotOptions(DefineProfile):
                 options.add_argument(load_extensions[:-1])
 
         return options
-    
-    
-    @property
-    def options(self):
-        return self._options
-    
-    @options.setter
-    def options(self, options):
-        if options is None:
-            self._options = self.define_options(
-                    browser=self._browser,
-                    extensions=self.extensions,
-                    download_folder=self._download_folder,
-                    profile=self._profile,
-                    chromium_executable=self._chromium_executable
-                )
-        else:
-            self._options = options

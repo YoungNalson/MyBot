@@ -30,27 +30,6 @@ class DefineProfile:
         self.num_bot = kwargs.get('num_bot', 0)
         self.profile = kwargs.get('profile', None)
 
-    def define_profile(self, profile) -> str:
-        current_directory = os.getcwd()
-        profile_directory = fr'{current_directory}\bots\bot{self._num_bot}'
-
-        try:
-            shutil.rmtree(profile_directory)
-        except FileNotFoundError:
-            pass
-
-        if self.copy_profile is True:
-            shutil.copytree(profile, profile_directory)
-        else:
-            os.makedirs(profile_directory)
-        
-        try: 
-            check_folder(profile_directory)
-        except FolderDoesNotExist:
-            raise ProfileNotCreated
-        
-        return profile_directory
-
 
     @property
     def num_bot(self):
@@ -72,6 +51,28 @@ class DefineProfile:
     @profile.setter
     def profile(self, profile):
         if profile is None or self.copy_profile is True:
-            self._profile = self.define_profile(self.profile)
+            self._profile = self.define_profile(profile)
         else:
             self._profile = profile
+
+
+    def define_profile(self, profile) -> str:
+        current_directory = os.getcwd()
+        profile_directory = fr'{current_directory}\bots\bot{self._num_bot}'
+
+        try:
+            shutil.rmtree(profile_directory)
+        except FileNotFoundError:
+            pass
+
+        if self.copy_profile is True:
+            shutil.copytree(profile, profile_directory)
+        else:
+            os.makedirs(profile_directory)
+        
+        try: 
+            check_folder(profile_directory)
+        except FolderDoesNotExist:
+            raise ProfileNotCreated
+        
+        return profile_directory
