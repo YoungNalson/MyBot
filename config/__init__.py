@@ -34,10 +34,11 @@ class BotOptions(DefineProfile):
         super().__init__(**kwargs)
 
         self.op_sys = platform.system()
-        userAgent = UserAgent(browsers=[self._browser],
-                              os=[self._op_sys],
-                              min_version=self._min_version).random
-        self.args = [f'--user-agent={userAgent}',
+        self.browser = kwargs.get('browser', 'chrome')
+        self.userAgent = UserAgent(browsers=[self._browser if self._browser != 'undetected-chrome' else 'chrome'],
+                                   os=[self._op_sys],
+                                   min_version=self._min_version)
+        self.args = [f'--user-agent=%s' % self.userAgent.random,
                      f'--user-data-dir=%s' % self._profile,
                      '--no-sandbox',
                      '--mute-audio',
@@ -70,7 +71,6 @@ class BotOptions(DefineProfile):
                       "browser.helperApps.neverAsk.saveToDisk": "application/pdf;",
                       'printing.print_preview_sticky_settings.appState': '{"recentDestinations":[{"id":"Save as PDF","origin":"local"}],"selectedDestinationId":"Save as PDF","version":2}'}
         
-        self.browser = kwargs.get('browser', 'chrome')
         self.extensions = kwargs.get('extensions', [])
         self.chromium_executable = kwargs.get('chromium_executable', None)
         self.options = kwargs.get('options', None)
@@ -88,7 +88,7 @@ class BotOptions(DefineProfile):
             op_sys = 'windows'
         if op_sys.lower() == 'darwin':
             op_sys = 'macos'
-        self._op_sys = op_sys
+        self._op_sys = op_sys.lower()
 
 
     @property
