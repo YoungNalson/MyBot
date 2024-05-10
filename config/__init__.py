@@ -81,7 +81,7 @@ class BotOptions(DefineProfile):
         return self._op_sys
     
     @op_sys.setter
-    def browser(self, op_sys):
+    def op_sys(self, op_sys):
         if op_sys is None or op_sys.lower() not in ['windows',
                                                     'linux',
                                                     'darwin']:
