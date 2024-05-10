@@ -1,16 +1,10 @@
-import sys
-from typing import Union
-
-from .config import BotOptions
-from selenium.webdriver.common.options import ArgOptions
-from selenium.webdriver.firefox.webdriver import WebDriver as FirefoxDriver
-from selenium.webdriver.chrome.webdriver import WebDriver as ChromeDriver
 from selenium.webdriver.chromium.webdriver import ChromiumDriver
 from selenium.webdriver.edge.webdriver import WebDriver as EdgeDriver
+from selenium.webdriver.chrome.webdriver import WebDriver as ChromeDriver
+from selenium.webdriver.firefox.webdriver import WebDriver as FirefoxDriver
+from undetected_chromedriver import Chrome as UndetectedChrome
 
-if sys.version_info.minor < 12:
-    from undetected_chromedriver import Chrome as UndetectedChrome
-
+from .config import BotOptions
 
 class BrowserNotSupported(Exception):
     def __init__(self, message:str='The browser is not supported.', browser:str=None):
