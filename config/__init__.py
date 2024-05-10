@@ -156,7 +156,9 @@ class BotOptions(DefineProfile):
             for key, value in self.prefs.items():
                 options.set_preference(key, value)
 
-        elif self._browser.lower() in ['chrome', 'chromium', 'undetected-chrome']:        
+        elif self._browser.lower() in ['chrome', 
+                                       'chromium', 
+                                       'undetected-chrome']:
             if self._browser.lower() == 'chrome':
                 options = ChromeOptions()
             elif self._browser.lower() == 'chromium':
@@ -201,7 +203,10 @@ class BotOptions(DefineProfile):
         for arg in self.args:
             options.add_argument(arg)
 
-        if self._browser.lower() in ['edge', 'chrome', 'chromium', 'undetected-chrome']:
+        if self._browser.lower() in ['edge', 
+                                     'chrome', 
+                                     'chromium', 
+                                     'undetected-chrome']:
             for extension in self.extensions:
                 if extension.endswith('.crx'):
                     options.add_extension(extension)
