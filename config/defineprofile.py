@@ -26,7 +26,7 @@ def check_folder(folder_path:str, timeout_seconds=60):
 
 class DefineProfile:
     def __init__(self, **kwargs) -> None:
-        self.copy_profile = kwargs.get('copy_profile', True)
+        self.copy_profile = kwargs.get('copy_profile', False)
         self.num_bot = kwargs.get('num_bot', 0)
         self.profile = kwargs.get('profile', None)
 
