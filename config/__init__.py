@@ -1,6 +1,7 @@
 import os
 import sys
 import random
+import platform
 from typing import Union
 
 from .defineprofile import DefineProfile
@@ -33,8 +34,10 @@ class BotOptions(DefineProfile):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
 
-        userAgent = UserAgent().random
-        
+        self.op_sys = platform.system()
+        userAgent = UserAgent(browsers=[self._browser],
+                              os=[self._op_sys],
+                              min_version=self._min_version).random
         self.args = [f'--user-agent={userAgent}',
                      f'--user-data-dir=%s' % self._profile,
                      '--no-sandbox',
@@ -75,6 +78,21 @@ class BotOptions(DefineProfile):
 
 
     @property
+    def op_sys(self):
+        return self._op_sys
+    
+    @op_sys.setter
+    def browser(self, op_sys):
+        if op_sys is None or op_sys.lower() not in ['windows',
+                                                    'linux',
+                                                    'darwin']:
+            op_sys = 'windows'
+        if op_sys.lower() == 'darwin':
+            op_sys = 'macos'
+        self._op_sys = op_sys
+
+
+    @property
     def browser(self):
         return self._browser
     
@@ -86,6 +104,8 @@ class BotOptions(DefineProfile):
                                    'undetected-chrome', 
                                    'edge']:
             raise BrowserNotSupported(browser=browser)
+        
+        self._min_version = 110.0
         self._browser = browser.lower()
     
 
