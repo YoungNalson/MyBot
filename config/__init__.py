@@ -40,6 +40,7 @@ class BotOptions(DefineProfile):
                                    min_version=self._min_version)
         self.args = [f'--user-agent=%s' % self.userAgent.random,
                      f'--user-data-dir=%s' % self._profile,
+                     '--headless',
                      '--no-sandbox',
                      '--mute-audio',
                      '--enable-webgl',
