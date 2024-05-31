@@ -1,5 +1,6 @@
 import os
 import platform
+from contextlib import suppress
 
 from fake_useragent import UserAgent
 from selenium.webdriver.chrome.options import Options as ChromeOptions
@@ -116,10 +117,8 @@ class BotOptions(DefineProfile):
             self._download_folder = fr'{self._profile}\.downloads'
         else:
             self._download_folder = download_folder
-        try:
+        with suppress(FileExistsError):
             os.makedirs(self._download_folder)
-        except FileExistsError:
-            pass
 
 
     @property

@@ -1,3 +1,4 @@
+import contextlib
 import os
 import shutil
 import time
@@ -61,10 +62,8 @@ class DefineProfile:
         current_directory = os.getcwd()
         profile_directory = fr'{current_directory}\bots\bot{self._num_bot}'
 
-        try:
+        with contextlib.suppress(FileNotFoundError):
             shutil.rmtree(profile_directory)
-        except FileNotFoundError:
-            pass
 
         if self.copy_profile is True:
             shutil.copytree(profile, profile_directory)
