@@ -1,19 +1,16 @@
 import os
-import sys
-import random
 import platform
-from typing import Union
 
-from selenium.webdriver.common.options import ArgOptions
-from selenium.webdriver.chromium.options import ChromiumOptions
-from selenium.webdriver.edge.options import Options as EdgeOptions
+from fake_useragent import UserAgent
 from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.chromium.options import ChromiumOptions
+from selenium.webdriver.common.options import ArgOptions
+from selenium.webdriver.edge.options import Options as EdgeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from undetected_chromedriver import ChromeOptions as UndetectedOptions
-from fake_useragent import UserAgent
-
 
 from .defineprofile import DefineProfile
+
 
 class BrowserNotSupported(Exception):
     def __init__(self, message:str='The browser is not supported.', browser:str=None):

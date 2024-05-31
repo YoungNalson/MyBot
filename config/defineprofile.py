@@ -1,6 +1,7 @@
 import os
-import time
 import shutil
+import time
+
 
 class ProfileNotCreated(Exception):
     def __init__(self, message="The profile folder was not created"):
