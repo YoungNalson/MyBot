@@ -122,14 +122,14 @@ class BotOptions(DefineProfile):
 
 
     @property
-    def chromium_executable(self):
-        return self._chromium_executable
+    def browser_executable(self):
+        return self._browser_executable
 
-    @chromium_executable.setter
-    def chromium_executable(self, chromium_executable):
-        if self._browser == 'chromium' and chromium_executable == None:
-            raise ChromiumPathNotInformed
-        self._chromium_executable = chromium_executable
+    @browser_executable.setter
+    def browser_executable(self, browser_executable):
+        if browser_executable is None:
+            browser_executable = ""
+        self._browser_executable = browser_executable
 
     
     @property
