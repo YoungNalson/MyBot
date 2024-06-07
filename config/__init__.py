@@ -71,7 +71,7 @@ class BotOptions(DefineProfile):
                       'printing.print_preview_sticky_settings.appState': '{"recentDestinations":[{"id":"Save as PDF","origin":"local"}],"selectedDestinationId":"Save as PDF","version":2}'}
         
         self.extensions = kwargs.get('extensions', [])
-        self.chromium_executable = kwargs.get('chromium_executable', None)
+        self.browser_executable = kwargs.get('browser_executable', None)
         self.options = kwargs.get('options', None)
 
 

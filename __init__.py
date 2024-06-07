@@ -19,7 +19,6 @@ class BrowserNotSupported(Exception):
 class MyBot(BotOptions):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
-        self.chromium_executable = kwargs.get('chromium_executable', None)
         self.driver_executable = kwargs.get('driver_executable', None)
         self.driver = None
 
@@ -43,7 +42,7 @@ class MyBot(BotOptions):
             elif self._browser == 'undetected-chrome':
                 self._driver = UndetectedChrome(
                     options=self._options,
-                    browser_executable_path=self.chromium_executable,
+                    browser_executable_path=self._browser_executable,
                     driver_executable_path=self.driver_executable
                 )
             
