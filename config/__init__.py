@@ -212,4 +212,5 @@ class BotOptions(DefineProfile):
             if load_extensions.split('=')[1]:
                 options.add_argument(load_extensions[:-1])
 
+        options.binary_location = self._browser_executable
         return options
