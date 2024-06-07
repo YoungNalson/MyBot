@@ -59,7 +59,7 @@ class BotOptions(DefineProfile):
                       "download.prompt_for_download": False,
                       "browser.download.panel.shown": False,
                       "webdriver_enable_native_events": False,
-                      # "plugins.always_open_pdf_externally": True,
+                      "plugins.always_open_pdf_externally": True,
                       "browser.helperApps.alwaysAsk.force": False,
                       "browser.download.manager.useWindow": False,
                       "browser.download.dir": self._download_folder,
