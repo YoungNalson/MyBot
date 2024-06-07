@@ -16,7 +16,7 @@ from .defineprofile import DefineProfile
 class BrowserNotSupported(Exception):
     def __init__(self, message:str='The browser is not supported.', browser:str=None):
         self.browser = browser
-        if browser == None:
+        if browser is None:
             self.message = message
         else:
             self.message = message + ' ' + browser
@@ -36,8 +36,8 @@ class BotOptions(DefineProfile):
         self.userAgent = UserAgent(browsers=[self._browser if self._browser != 'undetected-chrome' else 'chrome'],
                                    os=[self._op_sys],
                                    min_version=self._min_version)
-        self.args = [f'--user-agent=%s' % self.userAgent.random,
-                     f'--user-data-dir=%s' % self._profile,
+        self.args = ['--user-agent=%s' % self.userAgent.random,
+                     '--user-data-dir=%s' % self._profile,
                      '--headless',
                      '--no-sandbox',
                      '--mute-audio',
@@ -145,7 +145,6 @@ class BotOptions(DefineProfile):
 
 
     def define_options(self) -> ArgOptions:
-        
         load_extensions = '--load-extension='
         
         if self._browser.lower() == 'firefox':
@@ -160,8 +159,7 @@ class BotOptions(DefineProfile):
                 options = ChromeOptions()
             elif self._browser.lower() == 'chromium':
                 options = ChromiumOptions()
-                options.binary_location = self._chromium_executable
-            elif self._browser.lower() == 'undetected-chrome':
+            else:
                 options = UndetectedOptions()
 
             self.args.extend(['--no-xshm',

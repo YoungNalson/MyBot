@@ -10,7 +10,7 @@ from .config import BotOptions
 class BrowserNotSupported(Exception):
     def __init__(self, message:str='The browser is not supported.', browser:str=None):
         self.browser = browser
-        if browser == None:
+        if browser is None:
             self.message = message
         else:
             self.message = message + ' ' + browser
