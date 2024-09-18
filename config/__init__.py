@@ -36,39 +36,18 @@ class BotOptions(DefineProfile):
         self.userAgent = UserAgent(browsers=[self._browser if self._browser != 'undetected-chrome' else 'chrome'],
                                    os=[self._op_sys],
                                    min_version=self._min_version)
-        self.args = ['--user-agent=%s' % self.userAgent.random,
-                     '--user-data-dir=%s' % self._profile,
-                     '--headless',
-                     '--no-sandbox',
-                     '--mute-audio',
-                     '--enable-webgl',
-                     '--no-first-run',
-                     '--lang=en-US,en;q=0.9',
-                     '--password-store=basic',
-                     '--window-size=1920,1080',
-                     '--no-default-browser-check',
-                     '--ignore-certificate-errors',
-                     '--allow-running-insecure-content',
-                     '--disable-gpu',
-                     '--disable-infobars',
-                     '--disable-dev-shm-usage',]
+        
+        # Resources for Firefox:
+        # https://wiki.mozilla.org/Firefox/CommandLineOptions
+        # https://kb.mozillazine.org/About:config_entries
+        # https://kb.mozillazine.org/Category:Preferences
+        
+        # Resources for Chrome:
+        # https://src.chromium.org/viewvc/chrome/trunk/src/chrome/common/chrome_switches.cc?view=markup
         
         self.download_folder = kwargs.get('download_folder', None)
-        self.prefs = {"pdfjs.disabled": True,
-                      "browser.download.folderList": 2,
-                      "download.prompt_for_download": False,
-                      "browser.download.panel.shown": False,
-                      "webdriver_enable_native_events": False,
-                      "plugins.always_open_pdf_externally": True,
-                      "browser.helperApps.alwaysAsk.force": False,
-                      "browser.download.manager.useWindow": False,
-                      "browser.download.dir": self._download_folder,
-                      "download.default_directory": self._download_folder,
-                      "browser.download.manager.showWhenStarting": False,
-                      "savefile.default_directory": "%s" % self._download_folder,
-                      "browser.helperApps.neverAsk.openFile": "application/pdf;",
-                      "browser.helperApps.neverAsk.saveToDisk": "application/pdf;",
-                      'printing.print_preview_sticky_settings.appState': '{"recentDestinations":[{"id":"Save as PDF","origin":"local"}],"selectedDestinationId":"Save as PDF","version":2}'}
+        self.args = kwargs.get('args', [])
+        self.prefs = kwargs.get('prefs', {})
         
         self.extensions = kwargs.get('extensions', [])
         self.browser_executable = kwargs.get('browser_executable', None)
@@ -142,6 +121,87 @@ class BotOptions(DefineProfile):
             self._options = self.define_options()
         else:
             self._options = options
+    
+
+    @property
+    def args(self):
+        return self._args
+    
+    @args.setter
+    def args(self, args):
+        if not isinstance(args, list):
+            args = [args]
+        
+        # TODO implement firefox args
+        if self._browser.lower() == 'firefox' and not args:
+            args = ['-profile',
+                    self._profile,
+                    # '-headless',
+                    '-preferences',
+                    '-proxy-server="direct://"',
+                    '-proxy-bypass-list=*',]
+        elif not args:
+            args = ['--user-agent=%s' % self.userAgent.random,
+                    '--user-data-dir=%s' % self._profile,
+                    # '--headless',
+                    '--no-sandbox',
+                    '--mute-audio',
+                    '--enable-webgl',
+                    '--no-first-run',
+                    '--lang=en-US,en;q=0.9',
+                    '--password-store=basic',
+                    '--window-size=1920,1080',
+                    '--no-default-browser-check',
+                    '--ignore-certificate-errors',
+                    '--allow-running-insecure-content',
+                    '--disable-gpu',
+                    '--disable-infobars',
+                    '--disable-dev-shm-usage',]
+        # TODO implement firefox args
+        
+        self._args = args
+    
+
+    @property
+    def prefs(self):
+        return self._prefs
+    
+    @prefs.setter
+    def prefs(self, prefs):
+        if not isinstance(prefs, dict):
+            prefs = {}
+
+        if self._browser.lower() == 'firefox' and not prefs:
+            prefs = {"browser.download.folderList": 2,
+                     "browser.download.dir": self._download_folder,
+                     "browser.download.manager.showWhenStarting": False,
+                     "browser.helperApps.neverAsk.openFile": "application/pdf",
+                     "browser.helperApps.neverAsk.saveToDisk": "application/pdf,application/octet-stream,application/xml,",
+                     "browser.tabs.warnOnClose": False,
+                     "browser.tabs.warnOnCloseOther": False,
+                     "pdfjs.disabled": True,}
+        elif self._browser.lower() in ['chrome', 'chromium', 'undetected-chrome'] and not prefs:
+            prefs = {'plugins.plugins_disabled': ['Chrome PDF Viewer', 'Adobe Acrobat'],
+                     "browser.helperApps.neverAsk.saveToDisk": "application/octet-stream;application/xml;",
+                     "pdfjs.disabled": True,
+                     "browser.download.folderList": 2,
+                     "download.prompt_for_download": False,
+                     "browser.download.panel.shown": False,
+                     "webdriver_enable_native_events": False,
+                     "plugins.always_open_pdf_externally": True,
+                     "browser.helperApps.alwaysAsk.force": False,
+                     "browser.download.manager.useWindow": False,
+                     "browser.download.dir": self._download_folder,
+                     "download.default_directory": self._download_folder,
+                     "browser.download.manager.showWhenStarting": False,
+                     "savefile.default_directory": "%s" % self._download_folder,
+                     "browser.helperApps.neverAsk.openFile": "application/pdf;",
+                     "browser.helperApps.neverAsk.saveToDisk": "application/pdf;",
+                     'printing.print_preview_sticky_settings.appState': '{"recentDestinations":[{"id":"Save as PDF","origin":"local"}],"selectedDestinationId":"Save as PDF","version":2}'}
+        # TODO implement edge prefs
+        
+
+        self._prefs = prefs
 
 
     def define_options(self) -> ArgOptions:
@@ -149,7 +209,7 @@ class BotOptions(DefineProfile):
         
         if self._browser.lower() == 'firefox':
             options = FirefoxOptions()
-            for key, value in self.prefs.items():
+            for key, value in self._prefs.items():
                 options.set_preference(key, value)
 
         elif self._browser.lower() in ['chrome', 
@@ -162,40 +222,14 @@ class BotOptions(DefineProfile):
             else:
                 options = UndetectedOptions()
 
-            self.args.extend(['--no-xshm',
-                              '--no-zygote',
-                              '--kiosk-printing',
-                              '--enable-low-end-device-mode',
-                              '--disable-logging', ######
-                              '--disable-breakpad',
-                              '--disable-canvas-aa',
-                              '--disable-gpu-sandbox',
-                              '--disable-web-security',
-                              '--disable-notifications', ######
-                              '--disable-popup-blocking', ######
-                              '--disable-2d-canvas-clip-aa',
-                              '--disable-software-rasterizer',
-                              '--disable-gl-drawing-for-tests',
-                              '--disable-renderer-backgrounding',
-                              '--disable-background-timer-throttling',
-                              '--disable-backgrounding-occluded-windows',
-                              '--disable-blink-features=AutomationControlled',
-                              '--disable-features=IsolateOrigins,site-per-process'])
-            
-            self.prefs.update({'plugins.plugins_disabled': ['Chrome PDF Viewer', 'Adobe Acrobat'],
-                               "browser.helperApps.neverAsk.saveToDisk": "application/octet-stream;application/xml;",})
-
-            options.add_experimental_option('prefs', self.prefs)
-        
-            for extension in self.extensions:
-                load_extensions += extension + ','
+            options.add_experimental_option('prefs', self._prefs)
         
         elif self._browser.lower() == 'edge':
             options = EdgeOptions()
-            for key, value in self.prefs.items():
+            for key, value in self._prefs.items():
                 options.set_capability(key, value)
         
-        for arg in self.args:
+        for arg in self._args:
             options.add_argument(arg)
 
         if self._browser.lower() in ['edge', 
